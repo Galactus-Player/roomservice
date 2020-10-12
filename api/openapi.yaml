@@ -1,0 +1,35 @@
+openapi: 3.0.0
+info:
+  contact:
+    email: decline@umass.edu
+    name: Dan Cline
+  description: An implementation of joinable rooms
+  license:
+    name: MIT
+  title: roomservice
+  version: 0.0.1
+servers:
+- url: http://galactus.player/v1
+paths:
+  /gencode:
+    get:
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodeAndDate'
+          description: Room Code and Date.
+      summary: Return a fresh room code and date of creation.
+components:
+  schemas:
+    CodeAndDate:
+      example:
+        date: 2017-07-21T17:32:28Z
+        code: ABCDEF
+      properties:
+        code:
+          type: string
+        date:
+          type: string
+      type: object
