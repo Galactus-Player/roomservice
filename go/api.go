@@ -20,6 +20,7 @@ import (
 // pass the data to a DefaultApiServicer to perform the required actions, then write the service results to the http response.
 type DefaultApiRouter interface { 
 	GencodeGet(http.ResponseWriter, *http.Request)
+	RoomIdGet(http.ResponseWriter, *http.Request)
 }
 
 
@@ -29,4 +30,5 @@ type DefaultApiRouter interface {
 // and updated with the logic required for the API.
 type DefaultApiServicer interface { 
 	GencodeGet() (interface{}, error)
+	RoomIdGet(string) (interface{}, error)
 }

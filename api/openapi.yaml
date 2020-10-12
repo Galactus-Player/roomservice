@@ -21,15 +21,34 @@ paths:
                 $ref: '#/components/schemas/CodeAndDate'
           description: Room Code and Date.
       summary: Return a fresh room code and date of creation.
+  /room/{id}:
+    get:
+      parameters:
+      - description: Joining Room ID.
+        explode: false
+        in: path
+        name: id
+        required: false
+        schema:
+          $ref: '#/components/schemas/Code'
+        style: simple
+      responses:
+        200:
+          description: OK
+        404:
+          description: Room Not Found
 components:
   schemas:
+    Code:
+      type: string
     CodeAndDate:
       example:
         date: 2017-07-21T17:32:28Z
-        code: ABCDEF
       properties:
         code:
           type: string
         date:
           type: string
       type: object
+    Name:
+      type: string

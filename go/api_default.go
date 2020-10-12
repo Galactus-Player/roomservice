@@ -11,7 +11,6 @@
 package openapi
 
 import (
-	"encoding/json"
 	"net/http"
 	"strings"
 
@@ -25,28 +24,47 @@ type DefaultApiController struct {
 
 // NewDefaultApiController creates a default api controller
 func NewDefaultApiController(s DefaultApiServicer) Router {
-	return &DefaultApiController{ service: s }
+	return &DefaultApiController{service: s}
 }
 
 // Routes returns all of the api route for the DefaultApiController
 func (c *DefaultApiController) Routes() Routes {
-	return Routes{ 
+	return Routes{
 		{
 			"GencodeGet",
 			strings.ToUpper("Get"),
 			"/v1/gencode",
 			c.GencodeGet,
 		},
+		{
+			"RoomIdGet",
+			strings.ToUpper("Get"),
+			"/v1/room/{id}",
+			c.RoomIdGet,
+		},
 	}
 }
 
 // GencodeGet - Return a fresh room code and date of creation.
-func (c *DefaultApiController) GencodeGet(w http.ResponseWriter, r *http.Request) { 
+func (c *DefaultApiController) GencodeGet(w http.ResponseWriter, r *http.Request) {
 	result, err := c.service.GencodeGet()
 	if err != nil {
 		w.WriteHeader(500)
 		return
 	}
-	
+
+	EncodeJSONResponse(result, nil, w)
+}
+
+// RoomIdGet -
+func (c *DefaultApiController) RoomIdGet(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	id := params["id"]
+	result, err := c.service.RoomIdGet(id)
+	if err != nil {
+		w.WriteHeader(500)
+		return
+	}
+
 	EncodeJSONResponse(result, nil, w)
 }
