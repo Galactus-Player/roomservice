@@ -6,6 +6,7 @@
 go.mod
 go.sum
 main.go
+README.md
 
 # As an example, the C# client generator defines ApiClient.cs.
 # You can make changes and tell OpenAPI Generator to ignore just this file by uncommenting the following line:
