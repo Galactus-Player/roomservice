@@ -25,16 +25,9 @@ func NewDefaultApiService() DefaultApiServicer {
 	return &DefaultApiService{}
 }
 
-// GencodeGet - Return a fresh room code and date of creation.
-func (s *DefaultApiService) GencodeGet() (interface{}, error) {
-	// TODO - update GencodeGet with the required logic for this service method.
+// GetRoomByCode - 
+func (s *DefaultApiService) GetRoomByCode(code string) (interface{}, error) {
+	// TODO - update GetRoomByCode with the required logic for this service method.
 	// Add api_default_service.go to the .openapi-generator-ignore to avoid overwriting this service implementation when updating open api generation.
-	return nil, errors.New("service method 'GencodeGet' not implemented")
-}
-
-// RoomIdGet - 
-func (s *DefaultApiService) RoomIdGet(id string) (interface{}, error) {
-	// TODO - update RoomIdGet with the required logic for this service method.
-	// Add api_default_service.go to the .openapi-generator-ignore to avoid overwriting this service implementation when updating open api generation.
-	return nil, errors.New("service method 'RoomIdGet' not implemented")
+	return nil, errors.New("service method 'GetRoomByCode' not implemented")
 }

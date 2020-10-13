@@ -11,44 +11,63 @@ info:
 servers:
 - url: http://galactus.player/v1
 paths:
-  /gencode:
-    get:
+  /room:
+    post:
+      operationId: addRoom
       responses:
-        200:
+        "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CodeAndDate'
+                $ref: '#/components/schemas/Room'
           description: Room Code and Date.
-      summary: Return a fresh room code and date of creation.
-  /room/{id}:
+      summary: Create a new room
+      tags:
+      - room
+  /room/{code}:
     get:
+      description: Returns a Room
+      operationId: getRoomByCode
       parameters:
-      - description: Joining Room ID.
+      - description: ID of Room to return
         explode: false
         in: path
-        name: id
-        required: false
+        name: code
+        required: true
         schema:
-          $ref: '#/components/schemas/Code'
+          type: string
         style: simple
       responses:
-        200:
-          description: OK
-        404:
-          description: Room Not Found
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Room'
+          description: successful operation
+        "400":
+          content: {}
+          description: Invalid code supplied
+        "404":
+          content: {}
+          description: Room not found
 components:
   schemas:
-    Code:
-      type: string
-    CodeAndDate:
+    Room:
+      description: A room
       example:
-        date: 2017-07-21T17:32:28Z
+        createdAt: 2000-01-23T04:56:07.000+00:00
+        code: code
+        id: 0
       properties:
+        id:
+          format: int64
+          type: integer
         code:
           type: string
-        date:
+        createdAt:
+          format: date-time
           type: string
+      title: Room
       type: object
-    Name:
-      type: string
+      xml:
+        name: Room
