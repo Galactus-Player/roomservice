@@ -19,8 +19,13 @@ import (
 // The DefaultApiRouter implementation should parse necessary information from the http request, 
 // pass the data to a DefaultApiServicer to perform the required actions, then write the service results to the http response.
 type DefaultApiRouter interface { 
-	GencodeGet(http.ResponseWriter, *http.Request)
-	RoomIdGet(http.ResponseWriter, *http.Request)
+	GetRoomByCode(http.ResponseWriter, *http.Request)
+}
+// RoomApiRouter defines the required methods for binding the api requests to a responses for the RoomApi
+// The RoomApiRouter implementation should parse necessary information from the http request, 
+// pass the data to a RoomApiServicer to perform the required actions, then write the service results to the http response.
+type RoomApiRouter interface { 
+	AddRoom(http.ResponseWriter, *http.Request)
 }
 
 
@@ -29,6 +34,14 @@ type DefaultApiRouter interface {
 // while the service implementation can ignored with the .openapi-generator-ignore file 
 // and updated with the logic required for the API.
 type DefaultApiServicer interface { 
-	GencodeGet() (interface{}, error)
-	RoomIdGet(string) (interface{}, error)
+	GetRoomByCode(string) (interface{}, error)
+}
+
+
+// RoomApiServicer defines the api actions for the RoomApi service
+// This interface intended to stay up to date with the openapi yaml used to generate it, 
+// while the service implementation can ignored with the .openapi-generator-ignore file 
+// and updated with the logic required for the API.
+type RoomApiServicer interface { 
+	AddRoom() (interface{}, error)
 }

@@ -14,7 +14,7 @@ import (
 	"log"
 	"net/http"
 
-	openapi "github.com/Galactus-Player/roomservice/go"
+	openapi "github.com/GIT_USER_ID/GIT_REPO_ID/go"
 )
 
 func main() {
@@ -23,7 +23,10 @@ func main() {
 	DefaultApiService := openapi.NewDefaultApiService()
 	DefaultApiController := openapi.NewDefaultApiController(DefaultApiService)
 
-	router := openapi.NewRouter(DefaultApiController)
+	RoomApiService := openapi.NewRoomApiService()
+	RoomApiController := openapi.NewRoomApiController(RoomApiService)
+
+	router := openapi.NewRouter(DefaultApiController, RoomApiController)
 
 	log.Fatal(http.ListenAndServe(":8080", router))
 }
