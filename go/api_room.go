@@ -11,11 +11,8 @@
 package openapi
 
 import (
-	"encoding/json"
 	"net/http"
 	"strings"
-
-	"github.com/gorilla/mux"
 )
 
 // A RoomApiController binds http requests to an api service and writes the service results to the http response
@@ -25,12 +22,12 @@ type RoomApiController struct {
 
 // NewRoomApiController creates a default api controller
 func NewRoomApiController(s RoomApiServicer) Router {
-	return &RoomApiController{ service: s }
+	return &RoomApiController{service: s}
 }
 
 // Routes returns all of the api route for the RoomApiController
 func (c *RoomApiController) Routes() Routes {
-	return Routes{ 
+	return Routes{
 		{
 			"AddRoom",
 			strings.ToUpper("Post"),
@@ -41,12 +38,12 @@ func (c *RoomApiController) Routes() Routes {
 }
 
 // AddRoom - Create a new room
-func (c *RoomApiController) AddRoom(w http.ResponseWriter, r *http.Request) { 
+func (c *RoomApiController) AddRoom(w http.ResponseWriter, r *http.Request) {
 	result, err := c.service.AddRoom()
 	if err != nil {
 		w.WriteHeader(500)
 		return
 	}
-	
+
 	EncodeJSONResponse(result, nil, w)
 }

@@ -11,7 +11,6 @@
 package openapi
 
 import (
-	"encoding/json"
 	"net/http"
 	"strings"
 
@@ -25,12 +24,12 @@ type DefaultApiController struct {
 
 // NewDefaultApiController creates a default api controller
 func NewDefaultApiController(s DefaultApiServicer) Router {
-	return &DefaultApiController{ service: s }
+	return &DefaultApiController{service: s}
 }
 
 // Routes returns all of the api route for the DefaultApiController
 func (c *DefaultApiController) Routes() Routes {
-	return Routes{ 
+	return Routes{
 		{
 			"GetRoomByCode",
 			strings.ToUpper("Get"),
@@ -40,8 +39,8 @@ func (c *DefaultApiController) Routes() Routes {
 	}
 }
 
-// GetRoomByCode - 
-func (c *DefaultApiController) GetRoomByCode(w http.ResponseWriter, r *http.Request) { 
+// GetRoomByCode -
+func (c *DefaultApiController) GetRoomByCode(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	code := params["code"]
 	result, err := c.service.GetRoomByCode(code)
@@ -49,6 +48,6 @@ func (c *DefaultApiController) GetRoomByCode(w http.ResponseWriter, r *http.Requ
 		w.WriteHeader(500)
 		return
 	}
-	
+
 	EncodeJSONResponse(result, nil, w)
 }
