@@ -14,15 +14,15 @@ import (
 	"log"
 	"net/http"
 
-	openapi "github.com/Galactus-Player/roomservice/go"
+	"github.com/Galactus-Player/roomservice/galactuslib"
 )
 
 func main() {
 	log.Printf("Server started")
 
-	RoomApiController := openapi.NewRoomApiController()
+	RoomApiController := galactuslib.NewRoomApiController()
 
-	router := openapi.NewRouter(RoomApiController)
+	router := galactuslib.NewRouter(RoomApiController)
 
 	log.Fatal(http.ListenAndServe(":8080", router))
 }
