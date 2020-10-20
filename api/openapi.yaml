@@ -15,7 +15,7 @@ paths:
     post:
       operationId: addRoom
       responses:
-        "200":
+        200:
           content:
             application/json:
               schema:
@@ -38,16 +38,16 @@ paths:
           type: string
         style: simple
       responses:
-        "200":
+        200:
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Room'
           description: successful operation
-        "400":
+        400:
           content: {}
           description: Invalid code supplied
-        "404":
+        404:
           content: {}
           description: Room not found
 components:

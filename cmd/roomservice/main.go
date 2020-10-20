@@ -20,13 +20,9 @@ import (
 func main() {
 	log.Printf("Server started")
 
-	DefaultApiService := openapi.NewDefaultApiService()
-	DefaultApiController := openapi.NewDefaultApiController(DefaultApiService)
+	RoomApiController := openapi.NewRoomApiController()
 
-	RoomApiService := openapi.NewRoomApiService()
-	RoomApiController := openapi.NewRoomApiController(RoomApiService)
-
-	router := openapi.NewRouter(DefaultApiController, RoomApiController)
+	router := openapi.NewRouter(RoomApiController)
 
 	log.Fatal(http.ListenAndServe(":8080", router))
 }

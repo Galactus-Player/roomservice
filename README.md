@@ -19,7 +19,7 @@ To see how to make this your own, look here:
 To run the server, follow these simple steps:
 
 ```
-go run main.go
+go run cmd/roomservice/main.go
 ```
 
 To run the server in a docker container
