@@ -27,7 +27,7 @@ type RoomApiService struct {
 }
 
 const defaultSeed int64 = 42
-const maxCode int64 = 99999999
+const maxCode int64 = 9999
 
 // NewRoomApiService creates a default api service
 func NewRoomApiService(mapReference *map[string]Room) RoomApiServicer {
@@ -45,12 +45,12 @@ func (s *RoomApiService) AddRoom() (interface{}, error) {
 	}
 	roomMap := *s.rooms
 	roomNum := s.seededGenerator.Int63n(maxCode + 1)
-	roomCode := fmt.Sprintf("%08d", roomNum)
+	roomCode := fmt.Sprintf("%04d", roomNum)
 
 	// make sure we create a new room
 	for _, ok := roomMap[roomCode]; ok; _, ok = roomMap[roomCode] {
 		roomNum = s.seededGenerator.Int63n(maxCode + 1)
-		roomCode = fmt.Sprintf("%08d", roomNum)
+		roomCode = fmt.Sprintf("%04d", roomNum)
 	}
 
 	roomMap[roomCode] = Room{
