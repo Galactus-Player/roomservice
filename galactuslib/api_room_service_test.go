@@ -1,4 +1,4 @@
-package openapi
+package galactuslib
 
 import (
 	"context"
@@ -6,19 +6,19 @@ import (
 	"net/url"
 	"testing"
 
-	galactusrouters "github.com/Galactus-Player/roomservice/go"
+	"github.com/Galactus-Player/roomservice/roomapi"
 )
 
 // TestAddRoom tests creating a server, adding a room, and getting the result.
 func TestAddRoom(t *testing.T) {
 	// first create a new controller
-	api := galactusrouters.NewRoomApiController()
-	roomrouter := galactusrouters.NewRouter(api)
+	api := NewRoomApiController()
+	roomrouter := NewRouter(api)
 	testserver := httptest.NewServer(roomrouter)
 	defer testserver.Close()
 
 	// api configuration
-	apiConfig := NewConfiguration()
+	apiConfig := roomapi.NewConfiguration()
 	apiConfig.HTTPClient = testserver.Client()
 	testurl, err := url.Parse(testserver.URL)
 	if err != nil {
@@ -28,7 +28,7 @@ func TestAddRoom(t *testing.T) {
 	apiConfig.Host = testurl.Host
 
 	// create first client
-	apic := NewAPIClient(apiConfig)
+	apic := roomapi.NewAPIClient(apiConfig)
 	background := context.Background()
 	retRoom, _, err := apic.RoomApi.AddRoom(background)
 	if err != nil {
@@ -40,13 +40,13 @@ func TestAddRoom(t *testing.T) {
 
 func BenchmarkAddRoom(b *testing.B) {
 	// first create a new controller
-	api := galactusrouters.NewRoomApiController()
-	roomrouter := galactusrouters.NewRouter(api)
+	api := NewRoomApiController()
+	roomrouter := NewRouter(api)
 	testserver := httptest.NewServer(roomrouter)
 	defer testserver.Close()
 
 	// api configuration
-	apiConfig := NewConfiguration()
+	apiConfig := roomapi.NewConfiguration()
 	apiConfig.HTTPClient = testserver.Client()
 	testurl, err := url.Parse(testserver.URL)
 	if err != nil {
@@ -56,7 +56,7 @@ func BenchmarkAddRoom(b *testing.B) {
 	apiConfig.Host = testurl.Host
 
 	// create first client
-	apic := NewAPIClient(apiConfig)
+	apic := roomapi.NewAPIClient(apiConfig)
 	background := context.Background()
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
