@@ -15,19 +15,31 @@ import (
 )
 
 // DefaultApiService is a service that implents the logic for the DefaultApiServicer
-// This service should implement the business logic for every endpoint for the DefaultApi API. 
+// This service should implement the business logic for every endpoint for the DefaultApi API.
 // Include any external packages or services that will be required by this service.
 type DefaultApiService struct {
+	// rooms is a mapping from the room id to the actual Room object
+	rooms *map[string]Room
 }
 
 // NewDefaultApiService creates a default api service
-func NewDefaultApiService() DefaultApiServicer {
-	return &DefaultApiService{}
+func NewDefaultApiService(mapReference *map[string]Room) DefaultApiServicer {
+	return &DefaultApiService{
+		rooms: mapReference,
+	}
 }
 
-// GetRoomByCode - 
+// GetRoomByCode -
 func (s *DefaultApiService) GetRoomByCode(code string) (interface{}, error) {
-	// TODO - update GetRoomByCode with the required logic for this service method.
-	// Add api_default_service.go to the .openapi-generator-ignore to avoid overwriting this service implementation when updating open api generation.
-	return nil, errors.New("service method 'GetRoomByCode' not implemented")
+	// get the room using the map
+	if s.rooms == nil {
+		return nil, errors.New("map reference is nil, there is something wrong with initialization")
+	}
+	roomMap := *s.rooms
+	retRoom, ok := roomMap[code]
+	if !ok {
+		return nil, errors.New("code does not exist")
+	}
+
+	return retRoom, nil
 }

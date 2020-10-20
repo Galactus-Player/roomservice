@@ -12,22 +12,52 @@ package openapi
 
 import (
 	"errors"
+	"fmt"
+	"math/rand"
+	"time"
 )
 
 // RoomApiService is a service that implents the logic for the RoomApiServicer
-// This service should implement the business logic for every endpoint for the RoomApi API. 
+// This service should implement the business logic for every endpoint for the RoomApi API.
 // Include any external packages or services that will be required by this service.
 type RoomApiService struct {
+	// rooms is a mapping from the room id to the actual Room object
+	rooms           *map[string]Room
+	seededGenerator *rand.Rand
 }
 
+const defaultSeed int64 = 42
+const maxCode int64 = 99999999
+
 // NewRoomApiService creates a default api service
-func NewRoomApiService() RoomApiServicer {
-	return &RoomApiService{}
+func NewRoomApiService(mapReference *map[string]Room) RoomApiServicer {
+	return &RoomApiService{
+		rooms:           mapReference,
+		seededGenerator: rand.New(rand.NewSource(defaultSeed)),
+	}
 }
 
 // AddRoom - Create a new room
 func (s *RoomApiService) AddRoom() (interface{}, error) {
-	// TODO - update AddRoom with the required logic for this service method.
-	// Add api_room_service.go to the .openapi-generator-ignore to avoid overwriting this service implementation when updating open api generation.
-	return nil, errors.New("service method 'AddRoom' not implemented")
+	// get the room using the map
+	if s.rooms == nil {
+		return nil, errors.New("map reference is nil, there is something wrong with initialization")
+	}
+	roomMap := *s.rooms
+	roomNum := s.seededGenerator.Int63n(maxCode + 1)
+	roomCode := fmt.Sprintf("%08d", roomNum)
+
+	// make sure we create a new room
+	for _, ok := roomMap[roomCode]; ok; _, ok = roomMap[roomCode] {
+		roomNum = s.seededGenerator.Int63n(maxCode + 1)
+		roomCode = fmt.Sprintf("%08d", roomNum)
+	}
+
+	roomMap[roomCode] = Room{
+		Id:        roomNum,
+		Code:      roomCode,
+		CreatedAt: time.Now(),
+	}
+
+	return roomMap[roomCode], nil
 }

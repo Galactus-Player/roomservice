@@ -11,4 +11,8 @@ stdenv.mkDerivation {
     pkgs.go
     pkgs.vgo2nix
   ];
+
+  shellHook = ''
+    nvim
+  '';
 }
