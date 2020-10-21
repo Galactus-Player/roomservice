@@ -17,12 +17,14 @@ import (
 	"github.com/Galactus-Player/roomservice/galactuslib"
 )
 
+// TODO(rjected): move this value to a config
+const roomServerHost string = "localhost:8080"
+
 func main() {
-	log.Printf("Server started")
 
 	RoomApiController := galactuslib.NewRoomApiController()
-
 	router := galactuslib.NewRouter(RoomApiController)
 
-	log.Fatal(http.ListenAndServe(":8080", router))
+	log.Printf("Server starting on %s\n", roomServerHost)
+	log.Fatal(http.ListenAndServe(roomServerHost, router))
 }
