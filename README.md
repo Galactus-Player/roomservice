@@ -13,11 +13,10 @@ There are a few endpoints which can be called from the server,server
 ### Running the server
 To run the server, follow these simple steps:
 
-```
-go run cmd/roomservice/main.go
-```
+1. `docker run --name some-postgres -e POSTGRES_PASSWORD=postgres -p 5432:5432 -d postgres`
+2. `go run cmd/roomservice/main.go`
 
-To run the server in a docker container
+To run the server in a docker container first do step 1 from above and then
 ```
 docker build --network=host -t openapi .
 ```

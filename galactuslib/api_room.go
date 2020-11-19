@@ -39,7 +39,7 @@ func NewRoomApiController() Router {
 	// TODO(lukeyeh) dockerize this, and use better postgres name.
 	db := pg.Connect(&pg.Options{
 		Addr: ":5432",
-		User: "lukeyeh",
+		User: "postgres",
 	})
 
 	err := createRoomSchema(db)

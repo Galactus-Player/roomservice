@@ -73,7 +73,7 @@ func (s *RoomApiService) AddRoom() (interface{}, error) {
 		CreatedAt: createdAt,
 	}).Insert()
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 
 	return roomMap[roomCode], nil

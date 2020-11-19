@@ -45,15 +45,8 @@ func (s *DefaultApiService) GetRoomByCode(code string) (interface{}, error) {
 		Where("room.code = ?", code).
 		Select()
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
-
-	// In memory retrieval
-	//roomMap := *s.rooms
-	//retRoom, ok := roomMap[code]
-	//if !ok {
-	//return nil, errors.New("code does not exist")
-	//}
 
 	return retRoom, nil
 }
