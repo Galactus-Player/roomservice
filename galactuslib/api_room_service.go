@@ -15,6 +15,8 @@ import (
 	"fmt"
 	"math/rand"
 	"time"
+
+	"github.com/go-pg/pg/v10"
 )
 
 // RoomApiService is a service that implents the logic for the RoomApiServicer
@@ -24,16 +26,18 @@ type RoomApiService struct {
 	// rooms is a mapping from the room id to the actual Room object
 	rooms           *map[string]Room
 	seededGenerator *rand.Rand
+	db              *pg.DB
 }
 
 const defaultSeed int64 = 42
 const maxCode int64 = 9999
 
 // NewRoomApiService creates a default api service
-func NewRoomApiService(mapReference *map[string]Room) RoomApiServicer {
+func NewRoomApiService(mapReference *map[string]Room, dbReference *pg.DB) RoomApiServicer {
 	return &RoomApiService{
 		rooms:           mapReference,
 		seededGenerator: rand.New(rand.NewSource(defaultSeed)),
+		db:              dbReference,
 	}
 }
 
@@ -53,10 +57,23 @@ func (s *RoomApiService) AddRoom() (interface{}, error) {
 		roomCode = fmt.Sprintf("%04d", roomNum)
 	}
 
+	createdAt := time.Now()
+
+	// In memory store.
 	roomMap[roomCode] = Room{
 		Id:        roomNum,
 		Code:      roomCode,
-		CreatedAt: time.Now(),
+		CreatedAt: createdAt,
+	}
+
+	// DB Store for persistence.
+	_, err := s.db.Model(&Room{
+		Id:        roomNum,
+		Code:      roomCode,
+		CreatedAt: createdAt,
+	}).Insert()
+	if err != nil {
+		return nil, err
 	}
 
 	return roomMap[roomCode], nil

@@ -11,10 +11,14 @@
 package galactuslib
 
 import (
+	"context"
+	"fmt"
 	"net/http"
 	"strings"
 	"sync"
 
+	"github.com/go-pg/pg/v10"
+	"github.com/go-pg/pg/v10/orm"
 	"github.com/gorilla/mux"
 )
 
@@ -33,8 +37,35 @@ func NewRoomApiController() Router {
 		mapLock: sync.Mutex{},
 	}
 
-	currController.service = NewRoomApiService(&currController.roomMap)
-	currController.defaultservice = NewDefaultApiService(&currController.roomMap)
+	// Connect to postgres.
+	opt, err := pg.ParseURL(
+		fmt.Sprintf("postgres://%v:%v@%v:%v/%v?sslmode=disable",
+			pq_user,
+			pq_pass,
+			pq_host,
+			pq_port,
+			pq_dbname,
+		))
+	if err != nil {
+		panic(err)
+	}
+	db := pg.Connect(opt)
+
+	// Create schema for ORM.
+	err = createRoomSchema(db)
+	if err != nil {
+		panic(err)
+	}
+
+	// ensure DB is connected with ping.
+	ctx := context.Background()
+	if err := db.Ping(ctx); err != nil {
+		panic(err)
+	}
+
+	// Attach services to controller
+	currController.service = NewRoomApiService(&currController.roomMap, db)
+	currController.defaultservice = NewDefaultApiService(&currController.roomMap, db)
 
 	return currController
 }
@@ -83,4 +114,21 @@ func (c *RoomApiController) GetRoomByCode(w http.ResponseWriter, r *http.Request
 	}
 
 	EncodeJSONResponse(result, nil, w)
+}
+
+// createSchema creates database schema for Room.
+func createRoomSchema(db *pg.DB) error {
+	models := []interface{}{
+		(*Room)(nil),
+	}
+
+	for _, model := range models {
+		err := db.Model(model).CreateTable(&orm.CreateTableOptions{
+			Temp: true,
+		})
+		if err != nil {
+			return err
+		}
+	}
+	return nil
 }
