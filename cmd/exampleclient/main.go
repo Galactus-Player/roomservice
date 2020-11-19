@@ -1,9 +1,9 @@
 package main
 
 import (
-	"log"
 	"context"
-    "github.com/Galactus-Player/roomservice/roomapi"
+	"github.com/Galactus-Player/roomservice/roomapi"
+	"log"
 )
 
 const roomServiceHost string = "localhost:8080"
@@ -22,6 +22,13 @@ func main() {
 		log.Fatalf("error adding room: %s\n", err)
 		return
 	}
-	log.Printf("room id: %d, room id str: %s\n", retRoom.Id, retRoom.Code)
-}
+	log.Printf("[AddRoom]: room id: %d, room id str: %s\n", retRoom.Id, retRoom.Code)
 
+	retRoom, _, err = apic.DefaultApi.GetRoomByCode(background, retRoom.Code)
+	if err != nil {
+		log.Fatalf("error retrieving room: %s\n", err)
+		return
+	}
+	log.Printf("[GetRoomByCode] room id: %d, room id str: %s\n", retRoom.Id, retRoom.Code)
+
+}
