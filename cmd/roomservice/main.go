@@ -18,7 +18,7 @@ import (
 )
 
 // TODO(rjected): move this value to a config
-const roomServerHost string = "localhost:8080"
+const roomServerHost string = ":8080"
 
 func main() {
 
