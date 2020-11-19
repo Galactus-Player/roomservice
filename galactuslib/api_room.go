@@ -36,7 +36,6 @@ func NewRoomApiController() Router {
 		mapLock: sync.Mutex{},
 	}
 
-	// TODO(lukeyeh) dockerize this, and use better postgres name.
 	db := pg.Connect(&pg.Options{
 		Addr:     ":5432",
 		User:     "postgres",
