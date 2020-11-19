@@ -12,6 +12,7 @@ package galactuslib
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 	"strings"
 	"sync"
@@ -36,22 +37,33 @@ func NewRoomApiController() Router {
 		mapLock: sync.Mutex{},
 	}
 
-	db := pg.Connect(&pg.Options{
-		Addr:     ":5432",
-		User:     "postgres",
-		Password: "postgres",
-	})
+	// Connect to postgres.
+	opt, err := pg.ParseURL(
+		fmt.Sprintf("postgres://%v:%v@%v:%v/%v?sslmode=disable",
+			pq_user,
+			pq_pass,
+			pq_host,
+			pq_port,
+			pq_dbname,
+		))
+	if err != nil {
+		panic(err)
+	}
+	db := pg.Connect(opt)
 
-	err := createRoomSchema(db)
+	// Create schema for ORM.
+	err = createRoomSchema(db)
 	if err != nil {
 		panic(err)
 	}
 
+	// ensure DB is connected with ping.
 	ctx := context.Background()
 	if err := db.Ping(ctx); err != nil {
 		panic(err)
 	}
 
+	// Attach services to controller
 	currController.service = NewRoomApiService(&currController.roomMap, db)
 	currController.defaultservice = NewDefaultApiService(&currController.roomMap, db)
 

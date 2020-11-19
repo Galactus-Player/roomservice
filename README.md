@@ -13,8 +13,8 @@ There are a few endpoints which can be called from the server,server
 ### Running the server
 To run the server, follow these simple steps:
 
-1. `docker run --name some-postgres -e POSTGRES_PASSWORD=postgres -p 5432:5432 -d postgres`
-2. `go run cmd/roomservice/main.go`
+1. `docker stop postgres_host && docker run --name postgres_host --network pgnet -e POSTGRES_PASSWORD=postgres -p 5432:5432 -d postgres`. To start the postgres server
+2. `go run cmd/roomservice/main.go`. To start room service
 
 To run the server in a docker container first do step 1 from above and then
 ```
@@ -23,7 +23,7 @@ docker build --network=host -t openapi .
 
 Once image is built use
 ```
-docker run --rm -it openapi 
+docker run --rm --network pgnet -it openapi 
 ```
 
 ### Using the golang client library to interact with roomservice
