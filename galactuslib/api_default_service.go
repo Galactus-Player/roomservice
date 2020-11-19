@@ -12,6 +12,8 @@ package galactuslib
 
 import (
 	"errors"
+
+	"github.com/go-pg/pg/v10"
 )
 
 // DefaultApiService is a service that implents the logic for the DefaultApiServicer
@@ -20,12 +22,14 @@ import (
 type DefaultApiService struct {
 	// rooms is a mapping from the room id to the actual Room object
 	rooms *map[string]Room
+	db    *pg.DB
 }
 
 // NewDefaultApiService creates a default api service
-func NewDefaultApiService(mapReference *map[string]Room) DefaultApiServicer {
+func NewDefaultApiService(mapReference *map[string]Room, dbReference *pg.DB) DefaultApiServicer {
 	return &DefaultApiService{
 		rooms: mapReference,
+		db:    dbReference,
 	}
 }
 
@@ -35,11 +39,21 @@ func (s *DefaultApiService) GetRoomByCode(code string) (interface{}, error) {
 	if s.rooms == nil {
 		return nil, errors.New("map reference is nil, there is something wrong with initialization")
 	}
-	roomMap := *s.rooms
-	retRoom, ok := roomMap[code]
-	if !ok {
-		return nil, errors.New("code does not exist")
+
+	retRoom := new(Room)
+	err := s.db.Model(retRoom).
+		Where("room.code = ?", code).
+		Select()
+	if err != nil {
+		panic(err)
 	}
+
+	// In memory retrieval
+	//roomMap := *s.rooms
+	//retRoom, ok := roomMap[code]
+	//if !ok {
+	//return nil, errors.New("code does not exist")
+	//}
 
 	return retRoom, nil
 }
