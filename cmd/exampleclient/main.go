@@ -29,6 +29,6 @@ func main() {
 		log.Fatalf("error retrieving room: %s\n", err)
 		return
 	}
-	log.Printf("[GetRoomByCode] room id: %d, room id str: %s\n", retRoom.Id, retRoom.Code)
+	log.Printf("[GetRoomByCode]: room id: %d, room id str: %s\n", retRoom.Id, retRoom.Code)
 
 }
